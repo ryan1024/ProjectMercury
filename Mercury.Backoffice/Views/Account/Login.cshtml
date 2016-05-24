@@ -1,0 +1,55 @@
+﻿@using Mercury.Backoffice.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Mercury Backoffice | v0.1";
+    Layout = "~/Views/Shared/_LayoutEmpty.cshtml";
+}
+
+<div class="middle-box text-center loginscreen  animated fadeInDown">
+    <div>
+        @*<div>
+            <h1 class="logo-name">RC</h1>
+        </div>*@
+        <h3>Welcome to IN+</h3>
+        <section id="loginForm">
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "m-t", role = "form" }))
+    {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @*@Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })*@
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Username" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @*@Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })*@
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Password" })
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                </div>
+                @*<div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <div class="checkbox">
+                            @Html.CheckBoxFor(m => m.RememberMe)
+                            @Html.LabelFor(m => m.RememberMe)
+                        </div>
+                    </div>
+                </div>*@
+
+                <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
+                <a href="@Url.Action("ForgotPassword", "Account")"><small>Forgot password?</small></a>
+                <p class="text-muted text-center"><small>Do not have an account?</small></p>
+                <a class="btn btn-sm btn-white btn-block" href="@Url.Action("Register", "Account")">Create an account</a>
+
+
+                @* Enable this once you have account confirmation enabled for password reset functionality
+                <p>
+                    @Html.ActionLink("Forgot your password?", "ForgotPassword")
+                </p>*@
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
