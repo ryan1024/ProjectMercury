@@ -12,8 +12,8 @@ namespace Mercury.Backoffice.DAL.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Menu()
         {
-            MenuItems = new HashSet<MenuItem>();
-            UserRoleMenus = new HashSet<UserRoleMenu>();
+            MenuItem = new HashSet<MenuItem>();
+            UserRoleMenu = new HashSet<UserRoleMenu>();
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -52,9 +52,9 @@ namespace Mercury.Backoffice.DAL.Models
         public DateTime? UpdatedOn { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MenuItem> MenuItems { get; set; }
+        public virtual ICollection<MenuItem> MenuItem { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserRoleMenu> UserRoleMenus { get; set; }
+        public virtual ICollection<UserRoleMenu> UserRoleMenu { get; set; }
     }
 }

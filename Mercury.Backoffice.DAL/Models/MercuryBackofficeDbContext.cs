@@ -12,9 +12,9 @@ namespace Mercury.Backoffice.DAL.Models
         {
         }
 
-        public virtual DbSet<Menu> Menus { get; set; }
-        public virtual DbSet<MenuItem> MenuItems { get; set; }
-        public virtual DbSet<UserRoleMenu> UserRoleMenus { get; set; }
+        public virtual DbSet<Menu> Menu { get; set; }
+        public virtual DbSet<MenuItem> MenuItem { get; set; }
+        public virtual DbSet<UserRoleMenu> UserRoleMenu { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

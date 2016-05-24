@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mercury.Backoffice", "Mercu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mercury.Backoffice.DAL", "Mercury.Backoffice.DAL\Mercury.Backoffice.DAL.csproj", "{AB71BFF5-4533-497C-8CA1-EEE65F39755A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mercury.Backoffice.Core", "Mercury.Backoffice.Core\Mercury.Backoffice.Core.csproj", "{71FDAAC1-C777-4A9E-846E-4C33C90CBB44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{AB71BFF5-4533-497C-8CA1-EEE65F39755A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB71BFF5-4533-497C-8CA1-EEE65F39755A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB71BFF5-4533-497C-8CA1-EEE65F39755A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71FDAAC1-C777-4A9E-846E-4C33C90CBB44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71FDAAC1-C777-4A9E-846E-4C33C90CBB44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71FDAAC1-C777-4A9E-846E-4C33C90CBB44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71FDAAC1-C777-4A9E-846E-4C33C90CBB44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

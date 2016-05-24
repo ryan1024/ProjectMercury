@@ -23,7 +23,7 @@ namespace Mercury.Backoffice.DAL.Models
 
         public int? MenuId { get; set; }
 
-        [StringLength(450)]
+        [StringLength(128)]
         public string RoleId { get; set; }
 
         [StringLength(50)]

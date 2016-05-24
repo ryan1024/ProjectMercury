@@ -79,6 +79,9 @@ namespace Mercury.Backoffice.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+
+
+
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
