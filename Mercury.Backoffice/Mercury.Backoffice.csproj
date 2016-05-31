@@ -179,25 +179,41 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ManagementController.cs" />
+    <Compile Include="Helpers\GridConstructionHelper.cs" />
+    <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Controllers\DashboardsController.cs" />
-    <Compile Include="Controllers\GraphsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Models\AdminViewModel.cs" />
+    <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\HMTLHelperExtensions.cs" />
-    <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\IdentityModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utils\Environment\Assembly.cs" />
+    <Compile Include="Utils\Environment\IUserSession.cs" />
+    <Compile Include="Utils\Environment\UserSession.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\animate.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\email.css" />
+    <Content Include="Content\plugins\gijgo\dialog\dialog.base.css" />
+    <Content Include="Content\plugins\gijgo\dialog\dialog.base.min.css" />
+    <Content Include="Content\plugins\gijgo\grid\grid.base.css" />
+    <Content Include="Content\plugins\gijgo\grid\grid.base.min.css" />
+    <Content Include="Content\plugins\gijgo\grid\grid.pagination.css" />
+    <Content Include="Content\plugins\gijgo\grid\grid.pagination.min.css" />
+    <Content Include="Content\plugins\gijgo\grid\grid.resizableColumns.css" />
+    <Content Include="Content\plugins\gijgo\grid\grid.resizableColumns.min.css" />
+    <Content Include="Content\plugins\gijgo\grid\grid.responsiveDesign.css" />
+    <Content Include="Content\plugins\gijgo\grid\grid.responsiveDesign.min.css" />
     <Content Include="Content\landing\avatar_all.png" />
     <Content Include="Content\landing\header_one.jpg" />
     <Content Include="Content\landing\header_two.jpg" />
@@ -367,6 +383,48 @@
     <Content Include="fonts\font-awesome\scss\_variables.scss" />
     <Content Include="locales\en.json" />
     <Content Include="locales\es.json" />
+    <Content Include="Scripts\plugins\gijgo\dialog\dialog.base.js" />
+    <Content Include="Scripts\plugins\gijgo\dialog\dialog.base.min.js" />
+    <Content Include="Scripts\plugins\gijgo\draggable\draggable.base.js" />
+    <Content Include="Scripts\plugins\gijgo\draggable\draggable.base.min.js" />
+    <Content Include="Scripts\plugins\gijgo\grid\grid.base.js" />
+    <Content Include="Scripts\plugins\gijgo\grid\grid.base.min.js" />
+    <Content Include="Scripts\plugins\gijgo\grid\grid.expandCollapseRows.js" />
+    <Content Include="Scripts\plugins\gijgo\grid\grid.expandCollapseRows.min.js" />
+    <Content Include="Scripts\plugins\gijgo\grid\grid.inlineEditing.js" />
+    <Content Include="Scripts\plugins\gijgo\grid\grid.inlineEditing.min.js" />
+    <Content Include="Scripts\plugins\gijgo\grid\grid.pagination.js" />
+    <Content Include="Scripts\plugins\gijgo\grid\grid.pagination.min.js" />
+    <Content Include="Scripts\plugins\gijgo\grid\grid.resizableColumns.js" />
+    <Content Include="Scripts\plugins\gijgo\grid\grid.resizableColumns.min.js" />
+    <Content Include="Scripts\plugins\gijgo\grid\grid.responsiveDesign.js" />
+    <Content Include="Scripts\plugins\gijgo\grid\grid.responsiveDesign.min.js" />
+    <Content Include="Scripts\plugins\gijgo\grid\grid.toolbar.js" />
+    <Content Include="Scripts\plugins\gijgo\grid\grid.toolbar.min.js" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
+    <Content Include="Views\Manage\ChangePassword.cshtml" />
+    <Content Include="Views\Manage\Index.cshtml" />
+    <Content Include="Views\Manage\ManageLogins.cshtml" />
+    <Content Include="Views\Manage\SetPassword.cshtml" />
+    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
+    <Content Include="Views\Account\ConfirmEmail.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\SendCode.cshtml" />
+    <Content Include="Views\Account\VerifyCode.cshtml" />
+    <Content Include="Views\Dashboards\Dashboard_1.cshtml" />
+    <Content Include="Views\Dashboards\Dashboard_2.cshtml" />
+    <Content Include="Views\Dashboards\Dashboard_3.cshtml" />
+    <Content Include="Views\Dashboards\Dashboard_4.cshtml" />
+    <Content Include="Views\Dashboards\Dashboard_4_1.cshtml" />
+    <Content Include="Views\Dashboards\Dashboard_5.cshtml" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Images\a1.jpg" />
     <Content Include="Images\a2.jpg" />
@@ -1663,24 +1721,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Account\ConfirmEmail.cshtml" />
-    <Content Include="Views\Account\ForgotPassword.cshtml" />
-    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Account\ResetPassword.cshtml" />
-    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\SendCode.cshtml" />
-    <Content Include="Views\Account\VerifyCode.cshtml" />
-    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
-    <Content Include="Views\Manage\ChangePassword.cshtml" />
-    <Content Include="Views\Manage\Index.cshtml" />
-    <Content Include="Views\Manage\ManageLogins.cshtml" />
-    <Content Include="Views\Manage\SetPassword.cshtml" />
-    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Scripts\plugins\chartist\chartist.min.js.map" />
@@ -1696,13 +1736,17 @@
     <Content Include="Views\Shared\_SkinConfig.cshtml" />
     <Content Include="Views\Shared\_TopNavbar.cshtml" />
     <Content Include="Views\Shared\_TopNavbar2.cshtml" />
-    <Content Include="Views\Dashboards\Dashboard_1.cshtml" />
-    <Content Include="Views\Dashboards\Dashboard_2.cshtml" />
-    <Content Include="Views\Dashboards\Dashboard_3.cshtml" />
-    <Content Include="Views\Dashboards\Dashboard_4.cshtml" />
-    <Content Include="Views\Dashboards\Dashboard_4_1.cshtml" />
-    <Content Include="Views\Dashboards\Dashboard_5.cshtml" />
     <Content Include="Views\Shared\_LayoutEmpty.cshtml" />
+    <Content Include="Views\Management\RoleList.cshtml" />
+    <Content Include="Views\Management\RoleCreate.cshtml" />
+    <Content Include="Views\Management\RoleDetail.cshtml" />
+    <Content Include="Views\Management\RoleDelete.cshtml" />
+    <Content Include="Views\Management\RoleEdit.cshtml" />
+    <Content Include="Views\Management\UserCreate.cshtml" />
+    <Content Include="Views\Management\UserDelete.cshtml" />
+    <Content Include="Views\Management\UserDetail.cshtml" />
+    <Content Include="Views\Management\UserEdit.cshtml" />
+    <Content Include="Views\Management\UserList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1710,6 +1754,16 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mercury.Backoffice.Core\Mercury.Backoffice.Core.csproj">
+      <Project>{71fdaac1-c777-4a9e-846e-4c33c90cbb44}</Project>
+      <Name>Mercury.Backoffice.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mercury.Backoffice.DAL\Mercury.Backoffice.DAL.csproj">
+      <Project>{ab71bff5-4533-497c-8ca1-eee65f39755a}</Project>
+      <Name>Mercury.Backoffice.DAL</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

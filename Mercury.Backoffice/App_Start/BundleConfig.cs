@@ -67,6 +67,36 @@ namespace Mercury.Backoffice
             bundles.Add(new ScriptBundle("~/bundles/skinConfig").Include(
                       "~/Scripts/app/skin.config.min.js"));
 
+
+            // gijgo Grid
+            bundles.Add(new ScriptBundle("~/plugins/gijgo/grid").Include(
+                        "~/Scripts/plugins/gijgo/grid/grid.base.min.js",
+                        "~/Scripts/plugins/gijgo/grid/grid.expandCollapseRows.min.js",
+                        "~/Scripts/plugins/gijgo/grid/grid.inlineEditing.min.js",
+                        "~/Scripts/plugins/gijgo/grid/grid.pagination.min.js",
+                        "~/Scripts/plugins/gijgo/grid/grid.resizableColumns.min.js",
+                        "~/Scripts/plugins/gijgo/grid/grid.responsiveDesign.min.js",
+                        "~/Scripts/plugins/gijgo/grid/grid.toolbar.min.js"));
+
+            // gijgo Grid css
+            bundles.Add(new ScriptBundle("~/Content/plugins/gijgo/gridStyle").Include(
+                        "~/Content/plugins/gijgo/grid/grid.base.min.css",
+                        "~/Content/plugins/gijgo/grid/grid.pagination.min.css",
+                        "~/Content/plugins/gijgo/grid/grid.resizableColumns.min.css",
+                        "~/Content/plugins/gijgo/grid/grid.responsiveDesign.min.css"));
+
+            // gijgo Dialog
+            bundles.Add(new ScriptBundle("~/plugins/gijgo/dialog").Include(
+                    "~/Scripts/plugins/gijgo/dialog/dialog.base.min.js"));
+
+            // gijgo Dialog css
+            bundles.Add(new ScriptBundle("~/Content/plugins/gijgo/grid").Include(
+                        "~/Content/plugins/gijgo/grid/dialog.base.min.css"));
+
+            // gijgo Draggable
+            bundles.Add(new ScriptBundle("~/plugins/gijgo/draggable").Include(
+                        "~/Scripts/plugins/gijgo/grid/draggable..base.min.js"));
+
             // SlimScroll
             bundles.Add(new ScriptBundle("~/plugins/slimScroll").Include(
                       "~/Scripts/plugins/slimscroll/jquery.slimscroll.min.js"));

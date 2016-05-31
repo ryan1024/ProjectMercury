@@ -3,17 +3,21 @@
         <ul class="nav" id="side-menu">
             <li class="nav-header">
                 <div class="dropdown profile-element">
-                    <span>
+                    @*<span>
                         <img alt="image" class="img-circle" src="~/Images/profile_small.jpg" />
-                    </span>
+                    </span>*@
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <span class="clear">
                             <span class="block m-t-xs">
-                                <strong class="font-bold">David Williams</strong>
-                            </span> <span class="text-muted text-xs block">Art Director <b class="caret"></b></span>
+                                @*<b class="glyphicon glyphicon-menu-down"></b>*@
+                                <strong class="font-bold">@User.Identity.Name.ToString()</strong>
+                            </span>
+                            @*<span class="text-muted text-xs block">Art Director <b class="caret"></b></span>*@
+                            @*<span class="center-orientation"><b class="glyphicon glyphicon-menu-down"></b></span>*@
                         </span>
+                        
                     </a>
-                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                    <ul class="dropdown-menu animated fadeInDown m-t-xs">
                         <li><a href="@Url.Action("Profile", "AppViews")">Profile</a></li>
                         <li><a href="@Url.Action("Contacts", "AppViews")">Contacts</a></li>
                         <li><a href="@Url.Action("Inbox", "Mailbox")">Mailbox</a></li>
@@ -21,11 +25,35 @@
                         <li><a href="@Url.Action("Login", "Pages")">Logout</a></li>
                     </ul>
                 </div>
-                <div class="logo-element">
-                    IN+
-                </div>
             </li>
-            <li class="@Html.IsSelected(controller: "Dashboards")">
+
+            
+            @foreach (var menu in Mercury.Backoffice.Utils.Environment.Assembly.SessionContext.Foundation.MenuListing)
+            {
+                if (menu.IsClickable == true)
+                {
+                    <li class="@Html.IsSelected(controller: menu.Controller)">
+                        <a href="@Url.Action(menu.Action, menu.Controller)"><i class="@menu.ImagePath"></i> <span class="nav-label">@menu.MenuName</span></a>
+                    </li>
+                }
+                else if (menu.IsClickable == false)
+                {
+                    <li class="@Html.IsSelected(controller: menu.Controller)">
+                        <a href="@Url.Action("", menu.Controller)"><i class="@menu.ImagePath"></i> <span class="nav-label" data-i18n="nav.dashboard">@menu.MenuName</span> <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse @Html.IsSelected(controller: menu.Controller, cssClass: "in")">
+                            @foreach (var menuItem in Mercury.Backoffice.Utils.Environment.Assembly.SessionContext.Foundation.MenuItemListing)
+                            {
+                                if (menu.MenuId == menuItem.MenuId)
+                                {
+                                    <li class="@Html.IsSelected(action: menuItem.Action)"><a href="@Url.Action(menuItem.Action, menuItem.Controller)">@menuItem.MenuItemName</a></li>
+                                }
+                            }
+                        </ul>
+                    </li>
+                }
+            }
+
+            @*<li class="@Html.IsSelected(controller: "Dashboards")">
                 <a href="@Url.Action("Dashboard_1", "Dashboards")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Dashboards</span> <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Dashboards", cssClass: "in")">
                     <li class="@Html.IsSelected(action: "Dashboard_1")"><a href="@Url.Action("Dashboard_1", "Dashboards")">Dashboard v.1</a></li>
@@ -229,7 +257,7 @@
             </li>
             <li class="special_link @Html.IsSelected(controller: " Json")">
                 <a href="@Url.Action("Index", "Json")"><i class="fa fa-plug"></i> <span class="nav-label">JSON Examples</span></a>
-            </li>
+            </li>*@
         </ul>
     </div>
 </nav>

@@ -13,7 +13,6 @@ namespace Mercury.Backoffice.DAL.Models
         public Menu()
         {
             MenuItem = new HashSet<MenuItem>();
-            UserRoleMenu = new HashSet<UserRoleMenu>();
         }
 
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -22,10 +21,10 @@ namespace Mercury.Backoffice.DAL.Models
         [StringLength(100)]
         public string MenuName { get; set; }
 
-        [StringLength(200)]
-        public string Description { get; set; }
+        public bool? IsClickable { get; set; }
 
-        public bool? Clickable { get; set; }
+        [StringLength(100)]
+        public string PageCode { get; set; }
 
         [StringLength(100)]
         public string Action { get; set; }
@@ -33,11 +32,19 @@ namespace Mercury.Backoffice.DAL.Models
         [StringLength(100)]
         public string Controller { get; set; }
 
+        [StringLength(200)]
+        public string Description { get; set; }
+
         [StringLength(100)]
         public string ImagePath { get; set; }
 
         [StringLength(50)]
         public string Target { get; set; }
+
+        [StringLength(200)]
+        public string Roles { get; set; }
+
+        public int? SequenceNo { get; set; }
 
         public bool? IsActive { get; set; }
 
@@ -53,8 +60,5 @@ namespace Mercury.Backoffice.DAL.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MenuItem> MenuItem { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<UserRoleMenu> UserRoleMenu { get; set; }
     }
 }

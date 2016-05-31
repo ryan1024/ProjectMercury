@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -9,6 +10,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Mercury.Backoffice.Models;
+using Mercury.Backoffice.DAL;
+using Mercury.Backoffice.Utils;
 
 namespace Mercury.Backoffice.Controllers
 {
@@ -17,15 +20,18 @@ namespace Mercury.Backoffice.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private ApplicationRoleManager _roleManager;
 
         public AccountController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, 
+            ApplicationRoleManager roleManager )
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            RoleManager = roleManager;
         }
 
         public ApplicationSignInManager SignInManager
@@ -49,6 +55,18 @@ namespace Mercury.Backoffice.Controllers
             private set
             {
                 _userManager = value;
+            }
+        }
+
+        public ApplicationRoleManager RoleManager
+        {
+            get
+            {
+                return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>();
+            }
+            private set
+            {
+                _roleManager = value;
             }
         }
 
@@ -80,9 +98,36 @@ namespace Mercury.Backoffice.Controllers
             {
                 case SignInStatus.Success:
 
+                    var foundation = new Mercury.Backoffice.Core.Structure.Foundation();
+                    
+                    var userIdentity = (ClaimsIdentity)User.Identity;
+                    var claims = userIdentity.Claims;
+                    var roleClaimType = userIdentity.RoleClaimType;
+                    //var roles = claims.Where(c => c.Type == ClaimTypes.Role).ToList();
 
+                    if ((claims != null) && (claims.Count() > 0))
+                    {
+                        Thread.Sleep(2000);
 
-                    return RedirectToLocal(returnUrl);
+                        foundation.Roles = claims.Where(c => c.Type == ClaimTypes.Role).ToList();
+                        if (foundation.Roles != null && foundation.Roles.Count > 0)
+                        {
+                            foundation.ConstructNavigationData("#" + foundation.Roles.SingleOrDefault().Value.ToString() + "#");
+
+                            Mercury.Backoffice.Utils.Environment.Assembly.SessionContext.Foundation = foundation;
+
+                            return RedirectToLocal(returnUrl);
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "Invalid login attempt.");
+                            return View(model);
+                        }
+                    }
+                    else
+                    {
+                        return View("You don't have suffient role to access.");
+                    }
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:

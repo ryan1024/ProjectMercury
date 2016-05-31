@@ -1,0 +1,158 @@
+﻿@model IEnumerable<Mercury.Backoffice.Models.ApplicationRole>
+@{
+    ViewBag.Title = "User Role";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>@ViewBag.Title</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Home")">Home</a>
+            </li>
+            <li>
+                <a>Management</a>
+            </li>
+            <li class="active">
+                <strong>User Role List</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        @*<div class="col-lg-12">*@
+            <div class="ibox ">
+                <div class="ibox-title">
+                    @*<h5>Filter</h5>*@
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-md-offset-0 col-md-5">
+                                @Html.TextBox("txtSearchString", "", new { @class = "form-control", @placeholder = "Search by Role Name, Description" })<br />
+                                <input id="btnSearch" type="submit" value="Search" class="btn btn-default" />
+                                <input id="btnSearchClear" type="submit" value="Clear" class="btn btn-default" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ibox-content">
+                    <p>
+                        <i class="glyphicon glyphicon-plus"></i>&nbsp;@Html.ActionLink("Create New", "RoleCreate")
+                    </p>
+
+                    <div class="table-responsive">
+                        <table class="tbl-primary" id="grid" data-source="@Url.Action("GetUserRoleGrid", "Management")"></table>
+                    </div>
+
+                </div>
+            </div>
+        @*</div>*@
+    </div>
+</div>
+
+@*<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+        </th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "RoleEdit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "RoleDetail", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "RoleDelete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+</table>*@
+
+@section Styles {
+    @Styles.Render("~/Content/plugins/gijgo/gridStyle")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/gijgo/grid")
+
+    <script type="text/javascript">
+        $("#btnSearch").on("click", function () {
+            SearchGrid();
+        });
+
+        $("#btnSearchClear").on("click", function () {
+            ClearSearch();
+        })
+
+        $(document).ready(function () {
+            var grd;
+            grd = $("#grid").grid({
+                dataKey: "Id",
+                dataSource: { url: "GetUserRoleGrid", data: { searchString: "" }, cache: false, success: function (result) { grd.render(result); } },
+                uiLibrary: "bootstrap",
+                responsive: true,
+                autoLoad: true,
+                columns: [
+                    { field: "Id", title: "ID", width: "10%", hidden: true, width: 0 },
+                    { field: "Name", title: "Name", width: "20%", sortable: true },
+                    { field: "Description", title: "Description", width: "50%" },
+                    //{ field: "View", title: "", width: 34, type: "icon", icon: "glyphicon glyphicon-list-alt", tooltip: "View", events: { "click": View } },
+                    { field: "Edit", title: "", width: 34, type: "icon", icon: "glyphicon-pencil", tooltip: "Edit", events: { "click": Edit } },
+                    { field: "Delete", title: "", width: 34, type: "icon", icon: "glyphicon-remove", tooltip: "Edit", events: { "click": Delete } }
+                ],
+                pager: { enable: true, limit: 10, sizes: [5, 10, 20] }
+            });
+
+            function View(e) {
+                var url = '@Html.Raw(@Url.Action("RoleDetail", "Management", new { id = "_id_" }))';
+                var newUrl = url.replace("_id_", e.data.record.Id);
+                window.location.href = newUrl;
+            }
+
+            function Edit(e) {
+
+                //window.location.href = "/ContractorManagement/Contractor/TechFrom/" + e.data.id;
+
+                var url = '@Html.Raw(@Url.Action("RoleEdit", "Management", new { id = "_id_" }))';
+                var newUrl = url.replace("_id_", e.data.record.Id);
+                window.location.href = newUrl;
+            }
+
+            function Delete(e) {
+
+                //window.location.href = "/ContractorManagement/Contractor/TechFrom/" + e.data.id;
+
+                var url = '@Html.Raw(@Url.Action("RoleDelete", "Management", new { id = "_id_" }))';
+                var newUrl = url.replace("_id_", e.data.record.Id);
+                window.location.href = newUrl;
+            }
+
+        });
+        
+        function SearchGrid() {
+            $("#grid").grid().reload({ page: 1, isSearch: true, searchString: $("#txtSearchString").val() });
+            $("#grid").grid().reload({ page: 1, isSearch: false, searchString: $("#txtSearchString").val() });
+        }
+
+        function ClearSearch() {
+            $("#txtSearchString").val("");
+            SearchGrid();
+        }
+
+
+    </script>
+}

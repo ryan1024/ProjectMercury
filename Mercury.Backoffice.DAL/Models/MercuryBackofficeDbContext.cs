@@ -12,15 +12,12 @@ namespace Mercury.Backoffice.DAL.Models
         {
         }
 
+        public virtual DbSet<AspNetUsersExtension> AspNetUsersExtension { get; set; }
         public virtual DbSet<Menu> Menu { get; set; }
         public virtual DbSet<MenuItem> MenuItem { get; set; }
-        public virtual DbSet<UserRoleMenu> UserRoleMenu { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserRoleMenu>()
-                .Property(e => e.AccessLevel)
-                .IsUnicode(false);
         }
     }
 }

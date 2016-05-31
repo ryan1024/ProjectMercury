@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace Mercury.Backoffice.Controllers
 {
+    [Authorize]
     public class DashboardsController : Controller
     {
         public ActionResult Dashboard_1()

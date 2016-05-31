@@ -20,6 +20,9 @@ namespace Mercury.Backoffice.DAL.Models
         [StringLength(200)]
         public string Description { get; set; }
 
+        [StringLength(200)]
+        public string PageCode { get; set; }
+
         [StringLength(100)]
         public string Action { get; set; }
 
@@ -31,6 +34,11 @@ namespace Mercury.Backoffice.DAL.Models
 
         [StringLength(50)]
         public string Target { get; set; }
+
+        [StringLength(200)]
+        public string Roles { get; set; }
+
+        public int? SequenceNo { get; set; }
 
         public bool? IsActive { get; set; }
 
