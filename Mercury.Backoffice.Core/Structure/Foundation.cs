@@ -17,6 +17,17 @@ namespace Mercury.Backoffice.Core.Structure
 
         public List<Claim> Roles { get; set; }
 
+        public bool IsAuthenticated { get; private set; }
+
+        public Foundation()
+        { }
+
+        public Foundation(IIdentity identity)
+        {
+            IsAuthenticated = identity.IsAuthenticated;
+        }
+
+
         public void ConstructNavigationData(string roleId)
         {
             MenuListing = new List<Menu>();

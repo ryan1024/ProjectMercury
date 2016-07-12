@@ -15,13 +15,23 @@ using Mercury.Backoffice.DAL.Models;
 using Mercury.Backoffice.Core.Structure;
 using Mercury.Backoffice.Helpers;
 
-
 namespace Mercury.Backoffice.Controllers
 {
     //[Authorize(Roles = "*")]
     [Authorize]
     public class ManagementController : Controller
     {
+        MercuryBackofficeDbContext _db;
+        MercuryBackofficeDbContext dbContext
+        {
+            get
+            {
+                if (_db == null)
+                    _db = new MercuryBackofficeDbContext();
+                return _db;
+            }
+        }
+
         public ManagementController()
         {
         }
@@ -244,42 +254,93 @@ namespace Mercury.Backoffice.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetUserRoleGrid(int? page, int? limit, string sortBy = null, string direction = "ASC", string searchString = null)
+        //public JsonResult GetUserRoleGrid(int? page, int? limit, string sortBy = null, string direction = "ASC", string searchString = null)
+        public JsonResult GetUserRoleGrid(string sidx, int page, int rows, string sort = "ASC", string searchString = "")
         //public JsonResult GetUserRoleGrid()
         {
-            int total;
-            var records = RoleManager.Roles.ToList();
+            int pageIndex = Convert.ToInt32(page) - 1;
+            int pageSize = rows;
 
-            if (searchString != null)
+            var records = new List<ApplicationRole>();
+
+            if (searchString == string.Empty)
+            {
+                //GET TOP 200 only
+                records = RoleManager.Roles.OrderBy("Name", "OrderBy").Paged(1, 200).ToList();
+            }
+            else if (searchString != null && searchString != string.Empty)
             {
                 searchString = searchString.ToLower();
 
                 //Description might be null
                 //records = records.Where(x => searchString.Any(txt => x.Name.ToLower().Contains(txt)) && searchString.Any(txt => x.Description.ToLower().Contains(txt))).ToList();
-                
+
                 //MUST SET TO LOWER CASE ONLY CAN SEARCH!!!!!
-                records = records.Where(x => x.Name.ToLower().Contains(searchString) || x.Description.ToLower().Contains(searchString)).ToList();
+                records = RoleManager.Roles.Where(x => x.Name.ToLower().Contains(searchString) || x.Description.ToLower().Contains(searchString)).ToList();
             }
 
-            //Set the columns to select
-            //records = records.Select(x => new { x.Id, x.Name, x.Description }).ToList();
 
-            //Default sorting
-            if (sortBy == null) { sortBy = "Name"; }
-
-            if (!string.IsNullOrEmpty(sortBy) && !string.IsNullOrEmpty(direction))
+            int totalRecords = records.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+            if (sort.ToUpper() == "DESC")
             {
-                if (direction.Trim().ToLower() == "asc") { direction = GridConstructionHelper.OrderByAsc; }
-                else { direction = GridConstructionHelper.OrderByDesc; }
-
-                records = GridConstructionHelper.OrderBy(records.AsQueryable(), sortBy, direction).ToList();
+                records = records.OrderByDescending(s => s.Name).ToList();
+                records = records.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            }
+            else
+            {
+                records = records.OrderBy(s => s.Name).ToList();
+                records = records.Skip(pageIndex * pageSize).Take(pageSize).ToList();
             }
 
-            total = records.Count();
+            var jsonData = new
+            {
+                rows = records.Select(x => new ApplicationRole
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description
+                }),
+                total = (int)Math.Ceiling((float)totalRecords / (float)rows),
+                page,
+                records = records.Count(),
+            };
 
-            records = GridConstructionHelper.Paged(records.AsQueryable(), page, limit).ToList();
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
 
-            return Json(new { records, total }, JsonRequestBehavior.AllowGet);
+            //int total;
+            //var records = RoleManager.Roles.ToList();
+
+            //if (searchString != null)
+            //{
+            //    searchString = searchString.ToLower();
+
+            //    //Description might be null
+            //    //records = records.Where(x => searchString.Any(txt => x.Name.ToLower().Contains(txt)) && searchString.Any(txt => x.Description.ToLower().Contains(txt))).ToList();
+
+            //    //MUST SET TO LOWER CASE ONLY CAN SEARCH!!!!!
+            //    records = records.Where(x => x.Name.ToLower().Contains(searchString) || x.Description.ToLower().Contains(searchString)).ToList();
+            //}
+
+            ////Set the columns to select
+            ////records = records.Select(x => new { x.Id, x.Name, x.Description }).ToList();
+
+            ////Default sorting
+            //if (sortBy == null) { sortBy = "Name"; }
+
+            //if (!string.IsNullOrEmpty(sortBy) && !string.IsNullOrEmpty(direction))
+            //{
+            //    if (direction.Trim().ToLower() == "asc") { direction = GridConstructionHelper.OrderByAsc; }
+            //    else { direction = GridConstructionHelper.OrderByDesc; }
+
+            //    records = GridConstructionHelper.OrderBy(records.AsQueryable(), sortBy, direction).ToList();
+            //}
+
+            //total = records.Count();
+
+            //records = GridConstructionHelper.Paged(records.AsQueryable(), page, limit).ToList();
+
+            //return Json(new { records, total }, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -556,13 +617,20 @@ namespace Mercury.Backoffice.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetUserGrid(int? page, int? limit, string sortBy = null, string direction = "ASC", string searchString = null)
-        //public JsonResult GetUserRoleGrid()
+        //public JsonResult GetUserGrid(int? page, int? limit, string sortBy = null, string direction = "ASC", string searchString = null)
+        public JsonResult GetUserGrid(string sidx, int page, int rows, string sort = "ASC", string searchString = "")
         {
-            int total;
-            var records = UserManager.Users.ToList();
+            int pageIndex = Convert.ToInt32(page) - 1;
+            int pageSize = rows;
 
-            if (searchString != null)
+            var records = new List<ApplicationUser>();
+
+            if (searchString == string.Empty)
+            {
+                //GET TOP 200 only
+                records = UserManager.Users.OrderBy("UserName", "OrderBy").Paged(1, 200).ToList();
+            }
+            else if (searchString != null && searchString != string.Empty)
             {
                 searchString = searchString.ToLower();
 
@@ -570,28 +638,71 @@ namespace Mercury.Backoffice.Controllers
                 //records = records.Where(x => searchString.Any(txt => x.Name.ToLower().Contains(txt)) && searchString.Any(txt => x.Description.ToLower().Contains(txt))).ToList();
 
                 //MUST SET TO LOWER CASE ONLY CAN SEARCH!!!!!
-                records = records.Where(x => x.UserName.ToLower().Contains(searchString) || x.DisplayAddress.ToLower().Contains(searchString)).ToList();
+                records = UserManager.Users.Where(x => x.UserName.ToLower().Contains(searchString) || x.Email.ToLower().Contains(searchString)).ToList();
             }
 
-            //Set the columns to select
-            //records = records.Select(x => new { x.Id, x.Name, x.Description }).ToList();
 
-            //Default sorting
-            if (sortBy == null) { sortBy = "UserName"; }
-
-            if (!string.IsNullOrEmpty(sortBy) && !string.IsNullOrEmpty(direction))
+            int totalRecords = records.Count();
+            var totalPages = (int)Math.Ceiling((float)totalRecords / (float)rows);
+            if (sort.ToUpper() == "DESC")
             {
-                if (direction.Trim().ToLower() == "asc") { direction = GridConstructionHelper.OrderByAsc; }
-                else { direction = GridConstructionHelper.OrderByDesc; }
-
-                records = GridConstructionHelper.OrderBy(records.AsQueryable(), sortBy, direction).ToList();
+                records = records.OrderByDescending(s => s.UserName).ToList();
+                records = records.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            }
+            else
+            {
+                records = records.OrderBy(s => s.UserName).ToList();
+                records = records.Skip(pageIndex * pageSize).Take(pageSize).ToList();
             }
 
-            total = records.Count();
+            var jsonData = new
+            {
+                rows = records.Select(x => new ApplicationUser
+                {
+                    Id = x.Id,
+                    UserName = x.UserName,
+                    Address = x.DisplayAddress
+                }),
+                total = (int)Math.Ceiling((float)totalRecords / (float)rows),
+                page,
+                records = records.Count(),
+            };
 
-            records = GridConstructionHelper.Paged(records.AsQueryable(), page, limit).ToList();
+            return Json(jsonData, JsonRequestBehavior.AllowGet);
 
-            return Json(new { records, total }, JsonRequestBehavior.AllowGet);
+            //int total;
+            //var records = UserManager.Users.ToList();
+
+            //if (searchString != null)
+            //{
+            //    searchString = searchString.ToLower();
+
+            //    //Description might be null
+            //    //records = records.Where(x => searchString.Any(txt => x.Name.ToLower().Contains(txt)) && searchString.Any(txt => x.Description.ToLower().Contains(txt))).ToList();
+
+            //    //MUST SET TO LOWER CASE ONLY CAN SEARCH!!!!!
+            //    records = records.Where(x => x.UserName.ToLower().Contains(searchString) || x.DisplayAddress.ToLower().Contains(searchString)).ToList();
+            //}
+
+            ////Set the columns to select
+            ////records = records.Select(x => new { x.Id, x.Name, x.Description }).ToList();
+
+            ////Default sorting
+            //if (sortBy == null) { sortBy = "UserName"; }
+
+            //if (!string.IsNullOrEmpty(sortBy) && !string.IsNullOrEmpty(direction))
+            //{
+            //    if (direction.Trim().ToLower() == "asc") { direction = GridConstructionHelper.OrderByAsc; }
+            //    else { direction = GridConstructionHelper.OrderByDesc; }
+
+            //    records = GridConstructionHelper.OrderBy(records.AsQueryable(), sortBy, direction).ToList();
+            //}
+
+            //total = records.Count();
+
+            //records = GridConstructionHelper.Paged(records.AsQueryable(), page, limit).ToList();
+
+            //return Json(new { records, total }, JsonRequestBehavior.AllowGet);
         }
 
 

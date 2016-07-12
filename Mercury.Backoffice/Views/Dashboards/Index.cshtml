@@ -1,0 +1,77 @@
+﻿@model Mercury.Backoffice.Models.DashboardsViewModel
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>@ViewBag.Title</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Home")">Home</a>
+            </li>
+            <li class="active">
+                <a>Dashboard</a>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-success pull-left">Total</span>
+                    <h5>&nbsp;Registered User(s)</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">@string.Format("{0:#,##0}", Model.TotalRegisteredUsers)</h1>
+                    @*<div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div>
+                    <small>Total income</small>*@
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="ibox float-e-margins">  
+                <div class="ibox-title">
+                    <span class="label label-success pull-left">Total</span>
+                    <h5>&nbsp;Race Event</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">@string.Format("{0:#,##0}", Model.TotalRaceEvent)</h1>
+                    @*<div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i></div>
+                    <small>New orders</small>*@
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-success pull-left">Total</span>
+                    <h5>&nbsp;Race Result</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">@string.Format("{0:#,##0}", Model.TotalRaceResult)</h1>
+                    @*<div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div>
+                    <small>New visits</small>*@
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-success pull-left">Total</span>
+                    <h5>&nbsp;Race Result Claimed</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">@string.Format("{0:#,##0}", Model.TotalRaceResultClaimed) (@string.Format("{0:#,##0.00}", Model.TotalRaceResultClaimedPercentage)%)</h1>
+                    @*<div class="stat-percent font-bold text-danger">38% <i class="fa fa-level-down"></i></div>
+                    <small>In first month</small>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

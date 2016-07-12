@@ -43,8 +43,13 @@
                 </p>
 
                 <div class="table-responsive">
-                    <table class="tbl-primary" id="grid" data-source="@Url.Action("GetUserGrid", "Management")"></table>
+                    <table id="grid"></table>
+                    <div id="pager"></div>
                 </div>
+
+                @*<div class="table-responsive">
+                    <table class="tbl-primary" id="grid" data-source="@Url.Action("GetUserGrid", "Management")"></table>
+                </div>*@
 
             </div>
         </div>
@@ -84,15 +89,21 @@
 </table>*@
 
 
-@section Styles {
+@*@section Styles {
     @Styles.Render("~/Content/plugins/gijgo/gridStyle")
+}*@
+
+@section Styles{
+    @Styles.Render("~/Content/plugins/jqGrid/jqGridStyles")
 }
 
 @section Scripts {
-    @Scripts.Render("~/plugins/gijgo/grid")
+    @*@Scripts.Render("~/plugins/gijgo/grid")*@
+    @Scripts.Render("~/plugins/jqGrid")
 
     <script type="text/javascript">
         $("#btnSearch").on("click", function () {
+            event.preventDefault();
             SearchGrid();
         });
 
@@ -102,6 +113,56 @@
 
         $(document).ready(function () {
             var grd;
+            $("#grid").jqGrid({
+                url: '@Url.Action("GetUserGrid", "Management")',
+                datatype: 'JSON',
+                mtype: 'GET',
+                colNames: ['Id', 'User Name', 'Address', 'Edit', 'Delete'],
+                colModel: [
+                    { key: true, hidden: true, name: 'Id', index: 'Id', editable: true, width: '20%' },
+                    { key: false, name: 'UserName', index: 'UserName', editable: true, width: '20%' },
+                    { key: false, name: 'Address', index: 'Address', editable: true, width: '20%' },
+                    { key: false, name: 'Edit', index: 'Edit', editable: true, formatter: EditLink, align: 'center', width: '5%' },
+                    { key: false, name: 'Delete', index: 'Delete', editable: true, formatter: DeleteLink, align: 'center', width: '5%' }
+                ],
+                pager: jQuery('#pager'),
+                rowNum: 10,
+                rowList: [10, 20, 30, 40],
+                height: '100%',
+                viewrecords: true,
+                caption: 'Race Event List',
+                loadince: false,
+                emptyrecords: 'No records to display',
+                jsonReader: {
+                    root: "rows",
+                    page: "page",
+                    total: "total",
+                    records: "records",
+                    repeatitems: false,
+                    Id: "0"
+                },
+                autowidth: true,
+                multiselect: false,
+            }).navGrid('#pager', { edit: false, add: false, del: false, search: false, refresh: true });
+            $(".ui-jqgrid-titlebar").hide();
+
+            function EditLink(cellvalue, options, rowObject) {
+
+                var url = '@Html.Raw(@Url.Action("UserEdit", "Management", new { id = "_id_" }))';
+                var newUrl = url.replace("_id_", rowObject.Id);
+                return "<a href=" + newUrl + "><i class='glyphicon glyphicon-pencil'></i></a>";
+            }
+
+
+            function DeleteLink(cellvalue, options, rowObject) {
+
+                var url = '@Html.Raw(@Url.Action("UserDelete", "Management", new { id = "_id_" }))';
+                var newUrl = url.replace("_id_", rowObject.Id);
+                return "<a href=" + newUrl + "><i class='glyphicon glyphicon-remove'></i></a>";
+            }
+
+
+            @*var grd;
             grd = $("#grid").grid({
                 dataKey: "Id",
                 dataSource: { url: "GetUserGrid", data: {}, cache: false, success: function (result) { grd.render(result); } },
@@ -141,13 +202,27 @@
                 var url = '@Html.Raw(@Url.Action("UserDelete", "Management", new { id = "_id_" }))';
                 var newUrl = url.replace("_id_", e.data.record.Id);
                 window.location.href = newUrl;
-            }
+            }*@
 
         });
 
         function SearchGrid() {
-            $("#grid").grid().reload({ page: 1, isSearch: true, searchString: $("#txtSearchString").val() });
-            $("#grid").grid().reload({ page: 1, isSearch: false, searchString: $("#txtSearchString").val() });
+            //$("#grid").grid().reload({ page: 1, isSearch: true, searchString: $("#txtSearchString").val() });
+            //$("#grid").grid().reload({ page: 1, isSearch: false, searchString: $("#txtSearchString").val() });
+
+            //var postDataValues = $("#grid").jqGrid('getGridParam', 'postData');
+
+            //$('.filterItem').each(function (index, item) {
+            //    postDataValues[$(item).attr('id')] = $(item).val();
+            //});
+
+            //$("#grid").jqGrid().setGridParam({ postData: postDataValues, page: 1 }).trigger('reloadGrid');
+
+            $("#grid").jqGrid().setGridParam({ postData: { searchString: $("#txtSearchString").val() } }).trigger('reloadGrid');
+
+            //$('#grid').jqGrid().trigger('reloadGrid', { page: 1, isSearch: true, searchString: '2009' });
+            //$('#grid').jqGrid().trigger('reloadGrid', { page: 1, isSearch: false, searchString: '2009' });
+
         }
 
         function ClearSearch() {

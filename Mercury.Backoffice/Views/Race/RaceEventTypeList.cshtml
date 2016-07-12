@@ -1,0 +1,138 @@
+﻿@model IEnumerable<Mercury.Backoffice.Models.RaceEventTypeViewModel>
+@{
+    ViewBag.Title = "Race Event Type List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>@ViewBag.Title</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Home")">Home</a>
+            </li>
+            <li>
+                <a>Race</a>
+            </li>
+            <li class="active">
+                <strong>Event Type List</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        @*<div class="col-lg-12">*@
+        <div class="ibox ">
+            <div class="ibox-title">
+                @*<h5>Filter</h5>*@
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-md-offset-0 col-md-5">
+                            @Html.TextBox("txtSearchString", "", new { @class = "form-control", @placeholder = "Search by Race Name, Description" })<br />
+                            <input id="btnSearch" type="button" value="Search" class="btn btn-default" />
+                            <input id="btnSearchClear" type="submit" value="Clear" class="btn btn-default" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ibox-content">
+                <p>
+                    <i class="glyphicon glyphicon-plus"></i>&nbsp;@Html.ActionLink("Create New", "RaceEventTypeCreate")
+                </p>
+
+                <div class="table-responsive">
+                    <table id="grid"></table>
+                    <div id="pager"></div>
+                </div>
+
+            </div>
+        </div>
+        @*</div>*@
+    </div>
+</div>
+
+@section Styles{
+    @Styles.Render("~/Content/plugins/jqGrid/jqGridStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/jqGrid")
+
+    <script type="text/javascript">
+        $("#btnSearch").on("click", function () {
+            event.preventDefault();
+            SearchGrid();
+        });
+
+        $("#btnSearchClear").on("click", function () {
+            ClearSearch();
+        })
+
+        $(document).ready(function () {
+            var grd;
+            $("#grid").jqGrid({
+                url: '@Url.Action("GetRaceEventTypeGrid", "Race")',
+                datatype: 'JSON',
+                mtype: 'GET',
+                colNames: ['EventTypeId', 'Event Type Name', 'Description', 'Edit', 'Delete'],
+                colModel: [
+                    { key: true, hidden: true, name: 'EventTypeId', index: 'EventTypeId', editable: true, width: '20%' },
+                    { key: false, name: 'EventTypeName', index: 'EventTypeName', editable: true, width: '20%' },
+                    { key: false, name: 'Description', index: 'Description', editable: true, width: '20%' },
+                    { key: false, name: 'Edit', index: 'Edit', editable: true, formatter: EditLink, align: 'center', width: '5%' },
+                    { key: false, name: 'Delete', index: 'Delete', editable: true, formatter: DeleteLink, align: 'center', width: '5%' },
+                ],
+                pager: jQuery('#pager'),
+                rowNum: 5,
+                rowList: [5, 10, 20, 40],
+                height: '100%',
+                viewrecords: true,
+                caption: 'Race Event List',
+                loadince: false,
+                emptyrecords: 'No records to display',
+                jsonReader: {
+                    root: "rows",
+                    page: "page",
+                    total: "total",
+                    records: "records",
+                    repeatitems: false,
+                    Id: "0"
+                },
+                autowidth: true,
+                multiselect: false,
+            }).navGrid('#pager', { edit: false, add: false, del: false, search: false, refresh: true });
+            $(".ui-jqgrid-titlebar").hide();
+
+            function EditLink(cellvalue, options, rowObject) {
+
+                var url = '@Html.Raw(@Url.Action("RaceEventTypeEdit", "Race", new { id = "_id_" }))';
+                var newUrl = url.replace("_id_", rowObject.EventTypeId);
+                return "<a href=" + newUrl + "><i class='glyphicon glyphicon-pencil'></i></a>";
+            }
+
+
+            function DeleteLink(cellvalue, options, rowObject) {
+
+                var url = '@Html.Raw(@Url.Action("RaceEventTypeDelete", "Race", new { id = "_id_" }))';
+                var newUrl = url.replace("_id_", rowObject.EventTypeId);
+                return "<a href=" + newUrl + "><i class='glyphicon glyphicon-remove'></i></a>";
+            }
+
+        });
+
+        function SearchGrid() {
+            $("#grid").jqGrid().setGridParam({ postData: { searchString: $("#txtSearchString").val() } }).trigger('reloadGrid');
+        }
+
+        function ClearSearch() {
+            $("#txtSearchString").val("");
+            SearchGrid();
+        }
+
+
+    </script>
+}
+

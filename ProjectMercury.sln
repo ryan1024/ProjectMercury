@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mercury.Backoffice.DAL", "M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mercury.Backoffice.Core", "Mercury.Backoffice.Core\Mercury.Backoffice.Core.csproj", "{71FDAAC1-C777-4A9E-846E-4C33C90CBB44}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mercury.Web.Tractivo", "Mercury.Web.Tractivo\Mercury.Web.Tractivo.csproj", "{8DE31A9C-064B-4BD4-8370-567124F00771}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{71FDAAC1-C777-4A9E-846E-4C33C90CBB44}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71FDAAC1-C777-4A9E-846E-4C33C90CBB44}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71FDAAC1-C777-4A9E-846E-4C33C90CBB44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DE31A9C-064B-4BD4-8370-567124F00771}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DE31A9C-064B-4BD4-8370-567124F00771}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DE31A9C-064B-4BD4-8370-567124F00771}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DE31A9C-064B-4BD4-8370-567124F00771}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,229 @@
+﻿@model IEnumerable<Mercury.Backoffice.Models.RaceEventViewModel>
+@{
+    ViewBag.Title = "Race Event List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>@ViewBag.Title</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Home")">Home</a>
+            </li>
+            <li>
+                Race
+            </li>
+            <li class="active">
+                <strong>Event List</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        @*<div class="col-lg-12">*@
+        <div class="ibox ">
+            <div class="ibox-title">
+                @*<h5>Filter</h5>*@
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-md-offset-0 col-md-5">
+                            @Html.TextBox("txtSearchString", "", new { @class = "form-control", @placeholder = "Search by Race Name, Description" })<br />
+                            <input id="btnSearch" type="button" value="Search" class="btn btn-default" />
+                            <input id="btnSearchClear" type="submit" value="Clear" class="btn btn-default" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ibox-content">
+                <p>
+                    <i class="glyphicon glyphicon-plus"></i>&nbsp;@Html.ActionLink("Create New", "RaceEventCreate")
+                </p>
+
+                <div class="table-responsive">
+                    <table id="grid"></table>
+                    <div id="pager"></div>
+                </div>
+
+                @*<div class="table-responsive">
+                    <table class="tbl-primary" id="grid" data-source="@Url.Action("GetRaceEventGrid", "Race")"></table>
+                </div>*@
+
+            </div>
+        </div>
+        @*</div>*@
+    </div>
+</div>
+
+@*@section Styles {
+    @Styles.Render("~/Content/plugins/gijgo/gridStyle")
+}*@
+
+@section Styles{
+    @Styles.Render("~/Content/plugins/jqGrid/jqGridStyles")
+}
+
+@section Scripts {
+    @*@Scripts.Render("~/plugins/gijgo/grid")*@
+    @Scripts.Render("~/plugins/jqGrid")
+
+    <script type="text/javascript">
+        $("#btnSearch").on("click", function () {
+            event.preventDefault();
+            SearchGrid();
+        });
+
+        $("#btnSearchClear").on("click", function () {
+            ClearSearch();
+        })
+
+        $(document).ready(function () {
+            var grd;
+            $("#grid").jqGrid({
+                url: '@Url.Action("GetRaceEventGrid", "Race")',
+                datatype: 'JSON',
+                mtype: 'GET',
+                colNames: ['EventId', 'Event Name', 'Description', 'Event Type', 'Start On', 'End On', 'Result', 'Edit', 'Delete'],
+                colModel: [
+                    { key: true, hidden: true, name: 'EventId', index: 'EventId', editable: true, width: '20%' },
+                    { key: false, name: 'EventName', index: 'EventName', editable: true, width: '20%' },
+                    { key: false, name: 'Description', index: 'Description', editable: true, width: '20%' },
+                    { key: false, name: 'EventTypeName', index: 'EventTypeName', editable: true, width: '20%' },
+                    { key: false, name: 'EventStartOn', index: 'EventStartOn', editable: true, formatter: 'date', formatoptions: { newformat: 'Y-m-d' }, align: 'center', width: '20%' },
+                    { key: false, name: 'EventEndOn', index: 'EventEndOn', editable: true, formatter: 'date', formatoptions: { newformat: 'Y-m-d' }, align: 'center', width: '20%' },
+                    { key: false, name: 'Result', index: 'Result', editable: true, formatter: ResultLink, align: 'center', width: '5%' },
+                    { key: false, name: 'Edit', index: 'Edit', editable: true, formatter: EditLink, align: 'center', width: '5%' },
+                    { key: false, name: 'Delete', index: 'Delete', editable: true, formatter: DeleteLink, align: 'center', width: '5%' }
+                ],
+                pager: jQuery('#pager'),
+                rowNum: 10,
+                rowList: [10, 20, 30, 40],
+                height: '100%',
+                viewrecords: true,
+                caption: 'Race Event List',
+                loadince: false,
+                emptyrecords: 'No records to display',
+                jsonReader: {
+                    root: "rows",
+                    page: "page",
+                    total: "total",
+                    records: "records",
+                    repeatitems: false,
+                    Id: "0"
+                },
+                autowidth: true,
+                multiselect: false,
+            }).navGrid('#pager', { edit: false, add: false, del: false, search: false, refresh: true });
+            $(".ui-jqgrid-titlebar").hide();
+
+            function ResultLink(cellvalue, options, rowObject) {
+
+                var url = '@Html.Raw(@Url.Action("RaceResultList", "Race", new { id = "_id_" }))';
+                var newUrl = url.replace("_id_", rowObject.EventId);
+                return "<a href=" + newUrl + "><i class='glyphicon glyphicon-time'></i></a>";
+            }
+
+            function EditLink(cellvalue, options, rowObject) {
+
+                var url = '@Html.Raw(@Url.Action("RaceEventEdit", "Race", new { id = "_id_" }))';
+                var newUrl = url.replace("_id_", rowObject.EventId);
+                return "<a href=" + newUrl + "><i class='glyphicon glyphicon-pencil'></i></a>";
+            }
+
+
+            function DeleteLink(cellvalue, options, rowObject) {
+
+                var url = '@Html.Raw(@Url.Action("RaceEventDelete", "Race", new { id = "_id_" }))';
+                var newUrl = url.replace("_id_", rowObject.EventId);
+                return "<a href=" + newUrl + "><i class='glyphicon glyphicon-remove'></i></a>";
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+            @*grd = $("#grid").grid({
+                dataKey: "EventId",
+                dataSource: { url: "GetRaceEventGrid", data: { searchString: "" }, cache: false, success: function (result) { grd.render(result); } },
+                uiLibrary: "bootstrap",
+                responsive: true,
+                autoLoad: true,
+                columns: [
+                    { field: "EventId", title: "ID", width: "10%", hidden: true, width: 0 },
+                    { field: "EventName", title: "Event Name", width: "20%", sortable: true },
+                    { field: "Description", title: "Description", width: "30%" },
+                    { field: "EventTypeName", title: "Type", width: "10%" },
+
+                    { field: "EventStartOn", title: "Start on", width: "10%", sortable: true, type: 'time', format: 'dd-MMM-yyyy hh:mm:ss tt' },
+
+                    { field: "EventEndOn", title: "End on", width: "10%", sortable: true, type: 'date', format: 'dd-MMM-yyyy hh:mm:ss tt' },
+                    //{ field: "View", title: "", width: 34, type: "icon", icon: "glyphicon glyphicon-list-alt", tooltip: "View", events: { "click": View } },
+                    { field: "Edit", title: "", width: 34, type: "icon", icon: "glyphicon-pencil", tooltip: "Edit", events: { "click": Edit } },
+                    { field: "Delete", title: "", width: 34, type: "icon", icon: "glyphicon-remove", tooltip: "Edit", events: { "click": Delete } }
+                ],
+                pager: { enable: true, limit: 10, sizes: [5, 10, 20] }
+            });
+
+            function View(e) {
+                var url = '@Html.Raw(@Url.Action("RaceEventDetail", "Race", new { id = "_id_" }))';
+                var newUrl = url.replace("_id_", e.data.record.EventId);
+                window.location.href = newUrl;
+            }
+
+            function Edit(e) {
+
+                //window.location.href = "/ContractorManagement/Contractor/TechFrom/" + e.data.id;
+
+                var url = '@Html.Raw(@Url.Action("RaceEventEdit", "Race", new { id = "_id_" }))';
+                var newUrl = url.replace("_id_", e.data.record.EventId);
+                window.location.href = newUrl;
+            }
+
+            function Delete(e) {
+
+                //window.location.href = "/ContractorManagement/Contractor/TechFrom/" + e.data.id;
+
+                var url = '@Html.Raw(@Url.Action("RaceEventDelete", "Race", new { id = "_id_" }))';
+                var newUrl = url.replace("_id_", e.data.record.EventId);
+                window.location.href = newUrl;
+            }*@
+
+        });
+
+        function SearchGrid() {
+            //$("#grid").grid().reload({ page: 1, isSearch: true, searchString: $("#txtSearchString").val() });
+            //$("#grid").grid().reload({ page: 1, isSearch: false, searchString: $("#txtSearchString").val() });
+
+            //var postDataValues = $("#grid").jqGrid('getGridParam', 'postData');
+
+            //$('.filterItem').each(function (index, item) {
+            //    postDataValues[$(item).attr('id')] = $(item).val();
+            //});
+
+            //$("#grid").jqGrid().setGridParam({ postData: postDataValues, page: 1 }).trigger('reloadGrid');
+
+            $("#grid").jqGrid().setGridParam({ postData: { searchString: $("#txtSearchString").val() } }).trigger('reloadGrid');
+
+            //$('#grid').jqGrid().trigger('reloadGrid', { page: 1, isSearch: true, searchString: '2009' });
+            //$('#grid').jqGrid().trigger('reloadGrid', { page: 1, isSearch: false, searchString: '2009' });
+
+        }
+
+        function ClearSearch() {
+            $("#txtSearchString").val("");
+            SearchGrid();
+        }
+
+
+    </script>
+}

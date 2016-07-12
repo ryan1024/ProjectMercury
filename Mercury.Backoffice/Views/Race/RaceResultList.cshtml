@@ -1,0 +1,170 @@
+﻿@*@model IEnumerable<Mercury.Backoffice.Models.RaceResultViewModel>*@
+@model Mercury.Backoffice.Models.RaceEventViewModel
+@{
+    ViewBag.Title = "Race Result List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>@ViewBag.Title</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Home")">Home</a>
+            </li>
+            <li>
+                <a>Race</a>
+            </li>
+            <li class="active">
+                <strong>Result List</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        @*<div class="col-lg-12">*@
+        <div class="ibox ">
+            <div class="ibox-title">
+                @*<h5>Filter</h5>*@
+                <div class="form-horizontal">
+                    <div class="form-group">
+
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.EventName)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.EventName)
+                            </dd>
+                        </dl>
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Description)
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(model => model.Description)
+                            </dd>
+                        </dl>
+
+                        <div class="col-md-offset-0 col-md-5">
+                            @Html.TextBox("txtSearchString", "", new { @class = "form-control", @placeholder = "Search by BIB, Full Name" })<br />
+                            <input id="btnSearch" type="button" value="Search" class="btn btn-default" />
+                            <input id="btnSearchClear" type="submit" value="Clear" class="btn btn-default" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ibox-content">
+                @*<p>
+                    <i class="glyphicon glyphicon-plus"></i>&nbsp;@Html.ActionLink("Create New", "RaceEventCreate")
+                </p>*@
+
+                <div class="table-responsive">
+                    <table id="grid"></table>
+                    <div id="pager"></div>
+                </div>
+
+                    @*<div class="table-responsive">
+                <table class="tbl-primary" id="grid" data-source="@Url.Action("GetRaceEventGrid", "Race")"></table>
+            </div>*@
+
+                </div>
+        </div>
+        @*</div>*@
+    </div>
+</div>
+
+@*@section Styles {
+        @Styles.Render("~/Content/plugins/gijgo/gridStyle")
+    }*@
+
+@section Styles{
+    @Styles.Render("~/Content/plugins/jqGrid/jqGridStyles")
+}
+
+@section Scripts {
+    @*@Scripts.Render("~/plugins/gijgo/grid")*@
+    @Scripts.Render("~/plugins/jqGrid")
+
+    <script type="text/javascript">
+        $("#btnSearch").on("click", function () {
+            event.preventDefault();
+            SearchGrid();
+        });
+
+        $("#btnSearchClear").on("click", function () {
+            ClearSearch();
+        })
+
+        $(document).ready(function () {
+            var grd;
+            $("#grid").jqGrid({
+                url: '@Url.Action("GetRaceResultGrid", "Race")',
+                postData: { eventId: '@ViewBag.EventId' },
+                datatype: 'JSON',
+                mtype: 'GET',
+                colNames: ['ResultId', 'Event Name', 'BIB', 'Full Name', 'Category', 'Nationality', 'Ranking By Category', 'Gun Time'],
+                colModel: [
+                    { key: true, hidden: true, name: 'ResultId', index: 'ResultId', editable: true, width: '0%' },
+                    { key: false, hidden: true, name: 'EventName', index: 'EventName', editable: true, width: '0%' },
+                    { key: false, name: 'BIB', index: 'BIB', editable: true, width: '10%', align: 'center' },
+                    { key: false, name: 'FullName', index: 'FullName', editable: true, width: '20%' },
+                    { key: false, name: 'CategoryDesc', index: 'CategoryDesc', editable: true, width: '10%', align: 'center' },
+                    { key: false, name: 'Nationality', index: 'Nationality', editable: true, width: '10%', align: 'center' },
+                    { key: false, name: 'RankingByCategory', index: 'RankingByCategory', editable: true, width: '10%', align: 'center' },
+                    { key: false, name: 'GunTime', index: 'GunTime', editable: true, width: '10%', formatter: 'date', formatoptions: { datefmt: "hh:mm:ss" }, align: 'center' },
+                    //{ key: false, name: 'EventStartOn', index: 'EventStartOn', editable: true, formatter: 'date', formatoptions: { newformat: 'Y-m-d' }, align: 'center', width: '20%' },
+                    //{ key: false, name: 'EventEndOn', index: 'EventEndOn', editable: true, formatter: 'date', formatoptions: { newformat: 'Y-m-d' }, align: 'center', width: '20%' },
+                    //{ key: false, name: 'Edit', index: 'Edit', editable: true, formatter: EditLink, align: 'center', width: '5%' },
+                    //{ key: false, name: 'Delete', index: 'Delete', editable: true, formatter: DeleteLink, align: 'center', width: '5%' },
+                ],
+                pager: jQuery('#pager'),
+                rowNum: 5,
+                rowList: [5, 10, 20, 40],
+                height: '100%',
+                viewrecords: true,
+                caption: 'Race Result List',
+                loadince: false,
+                emptyrecords: 'No records to display',
+                jsonReader: {
+                    root: "rows",
+                    page: "page",
+                    total: "total",
+                    records: "records",
+                    repeatitems: false,
+                    Id: "0"
+                },
+                autowidth: true,
+                multiselect: false,
+            }).navGrid('#pager', { edit: false, add: false, del: false, search: false, refresh: true });
+
+            function EditLink(cellvalue, options, rowObject) {
+                var url = '@Html.Raw(@Url.Action("RaceEventEdit", "Race", new { id = "_id_" }))';
+                var newUrl = url.replace("_id_", rowObject.EventId);
+                return "<a href=" + newUrl + "><i class='glyphicon glyphicon-pencil'></i></a>";
+            }
+
+
+            function DeleteLink(cellvalue, options, rowObject) {
+                var url = '@Html.Raw(@Url.Action("RaceEventDelete", "Race", new { id = "_id_" }))';
+                var newUrl = url.replace("_id_", rowObject.EventId);
+                return "<a href=" + newUrl + "><i class='glyphicon glyphicon-remove'></i></a>";
+            }
+        });
+
+        function SearchGrid() {
+            $("#grid").jqGrid().setGridParam({ postData: { searchString: $("#txtSearchString").val() } }).trigger('reloadGrid');
+        }
+
+        function ClearSearch() {
+            $("#txtSearchString").val("");
+            SearchGrid();
+        }
+
+
+    </script>
+}
+

@@ -180,6 +180,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ManagementController.cs" />
+    <Compile Include="Controllers\RaceController.cs" />
     <Compile Include="Helpers\GridConstructionHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -187,12 +188,14 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Models\AdminViewModel.cs" />
+    <Compile Include="Models\DashboardsViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\HMTLHelperExtensions.cs" />
     <Compile Include="Models\IdentityModel.cs" />
+    <Compile Include="Models\RaceViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\Environment\Assembly.cs" />
@@ -1747,6 +1750,18 @@
     <Content Include="Views\Management\UserDetail.cshtml" />
     <Content Include="Views\Management\UserEdit.cshtml" />
     <Content Include="Views\Management\UserList.cshtml" />
+    <Content Include="Views\Race\RaceEventCreate.cshtml" />
+    <Content Include="Views\Race\RaceEventEdit.cshtml" />
+    <Content Include="Views\Race\RaceEventDelete.cshtml" />
+    <Content Include="Views\Race\RaceEventDetail.cshtml" />
+    <Content Include="Views\Race\RaceEventList.cshtml" />
+    <Content Include="Views\Race\RaceEventTypeCreate.cshtml" />
+    <Content Include="Views\Race\RaceEventTypeDelete.cshtml" />
+    <Content Include="Views\Race\RaceEventTypeDetail.cshtml" />
+    <Content Include="Views\Race\RaceEventTypeEdit.cshtml" />
+    <Content Include="Views\Race\RaceEventTypeList.cshtml" />
+    <Content Include="Views\Race\RaceResultList.cshtml" />
+    <Content Include="Views\Dashboards\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

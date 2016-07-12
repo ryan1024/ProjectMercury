@@ -11,7 +11,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Mercury.Backoffice.Models;
 using Mercury.Backoffice.DAL;
-using Mercury.Backoffice.Utils;
+using Mercury.Backoffice.Utils.Environment;
 
 namespace Mercury.Backoffice.Controllers
 {
@@ -27,7 +27,7 @@ namespace Mercury.Backoffice.Controllers
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, 
-            ApplicationRoleManager roleManager )
+            ApplicationRoleManager roleManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -84,7 +84,8 @@ namespace Mercury.Backoffice.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        //public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public ActionResult Login(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
             {
@@ -93,41 +94,52 @@ namespace Mercury.Backoffice.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+
+            //var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var result = SignInManager.PasswordSignIn(model.Email, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
 
-                    var foundation = new Mercury.Backoffice.Core.Structure.Foundation();
-                    
-                    var userIdentity = (ClaimsIdentity)User.Identity;
-                    var claims = userIdentity.Claims;
-                    var roleClaimType = userIdentity.RoleClaimType;
-                    //var roles = claims.Where(c => c.Type == ClaimTypes.Role).ToList();
 
-                    if ((claims != null) && (claims.Count() > 0))
-                    {
-                        Thread.Sleep(2000);
 
-                        foundation.Roles = claims.Where(c => c.Type == ClaimTypes.Role).ToList();
-                        if (foundation.Roles != null && foundation.Roles.Count > 0)
-                        {
-                            foundation.ConstructNavigationData("#" + foundation.Roles.SingleOrDefault().Value.ToString() + "#");
 
-                            Mercury.Backoffice.Utils.Environment.Assembly.SessionContext.Foundation = foundation;
+                    //var foundation = new Mercury.Backoffice.Core.Structure.Foundation();
 
-                            return RedirectToLocal(returnUrl);
-                        }
-                        else
-                        {
-                            ModelState.AddModelError("", "Invalid login attempt.");
-                            return View(model);
-                        }
-                    }
-                    else
-                    {
-                        return View("You don't have suffient role to access.");
-                    }
+                    //var userIdentity = (ClaimsIdentity)User.Identity;
+                    //var claims = userIdentity.Claims;
+                    //var roleClaimType = userIdentity.RoleClaimType;
+                    ////var roles = claims.Where(c => c.Type == ClaimTypes.Role).ToList();
+
+                    //if ((claims != null) && (claims.Count() > 0))
+                    //{
+                    //    Thread.Sleep(5000);
+
+                    //    foundation.Roles = claims.Where(c => c.Type == ClaimTypes.Role).ToList();
+                    //    if (foundation.Roles != null && foundation.Roles.Count > 0)
+                    //    {
+                    //        foundation.ConstructNavigationData("#" + foundation.Roles.SingleOrDefault().Value.ToString() + "#");
+
+                    //        Mercury.Backoffice.Utils.Environment.Assembly.SessionContext.Foundation = foundation;
+
+                    //        return RedirectToLocal(returnUrl);
+                    //    }
+                    //    else
+                    //    {
+                    //        ModelState.AddModelError("", "Invalid login attempt.123");
+                    //        return View(model);
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    return View("You don't have suffient role to access.");
+                    //}
+
+                    ApplicationUser appUser = UserManager.FindByName(model.Email);
+
+                    Mercury.Backoffice.Utils.Environment.UserSession.SetUserProfile(appUser);
+
+                    return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -497,7 +509,8 @@ namespace Mercury.Backoffice.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            //return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Dashboards");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult

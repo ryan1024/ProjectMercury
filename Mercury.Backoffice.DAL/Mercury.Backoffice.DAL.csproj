@@ -55,6 +55,10 @@
     <Compile Include="Models\Menu.cs" />
     <Compile Include="Models\MenuItem.cs" />
     <Compile Include="Models\MercuryBackofficeDbContext.cs" />
+    <Compile Include="Models\RaceEvent.cs" />
+    <Compile Include="Models\RaceEventType.cs" />
+    <Compile Include="Models\RaceResult.cs" />
+    <Compile Include="Models\UserRaceResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
